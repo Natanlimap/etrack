@@ -25,15 +25,12 @@ class _FirstscreenState extends State<Firstscreen> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(top: 101),
-                  child: Icon(
-                    Icons.account_box,
-                    size: 132,
-                    color: Colors.red,
-                  ),
+                  child: Image.asset('lib/assets/Logo.png')
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 32),
+                  padding: EdgeInsets.only(top: 16),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
                         'E-',
@@ -41,15 +38,16 @@ class _FirstscreenState extends State<Firstscreen> {
                       ),
                       Text(
                         'Track',
-                        style:
-                            TextStyle(color: Color.fromRGBO(245, 15, 86, 100), fontSize: 48),
+                        style: TextStyle(
+                            color: Color.fromRGBO(245, 15, 86, 100),
+                            fontSize: 48),
                       ),
                     ],
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 61,
+                    top: 48,
                     right: 47,
                     left: 47,
                   ),
@@ -64,12 +62,35 @@ class _FirstscreenState extends State<Firstscreen> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 69,
+                    top: 48,
                   ),
-                  child: CircularProgressIndicator(
-                    value: null,
-                    strokeWidth: 7.0,
-                    backgroundColor: Colors.white,
+                ),
+                SizedBox(
+                  height: 200,
+                  child: Stack(
+                    children: <Widget>[
+                      Center(
+                        child: Container(
+                          width: 160,
+                          height: 160,
+                          child: new CircularProgressIndicator(
+                            strokeWidth: 7.0,
+                            value: null,
+                            backgroundColor: Colors.white,
+                            valueColor: new AlwaysStoppedAnimation<Color>(Color.fromRGBO(254, 123, 67, 100)),
+                          ),
+                        ),
+                      ),
+                      Center(child: 
+                      Text(
+                        'CARREGANDO...',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.white,
+                        ),
+                      ),
+                      )
+                    ],
                   ),
                 ),
               ],
