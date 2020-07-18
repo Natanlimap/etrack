@@ -1,4 +1,7 @@
+import 'package:etrack/pages/packets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class Firstscreen extends StatefulWidget {
   @override
@@ -6,8 +9,26 @@ class Firstscreen extends StatefulWidget {
 }
 
 class _FirstscreenState extends State<Firstscreen> {
+
+
+
+  void pageNavigation(){
+   Navigator.push(
+     context, CupertinoPageRoute(builder: (context) => PacketsMain()),
+   );
+  }
+
+  @override
+  void initState() {
+    Timer(const Duration(seconds: 3), pageNavigation);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+
+
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -24,52 +45,43 @@ class _FirstscreenState extends State<Firstscreen> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 101),
-                  child: Icon(
-                    Icons.account_box,
-                    size: 132,
-                    color: Colors.red,
-                  ),
+                  padding: EdgeInsets.only(top: size.height*0.3),
+                  child: Image(image: AssetImage("assets/images/icon.png"),width: size.width*0.3,)
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 32),
+                  padding: EdgeInsets.only(top: 5),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
                         'E-',
-                        style: TextStyle(fontSize: 48),
+                        style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70
+                        ),
                       ),
                       Text(
                         'Track',
                         style:
-                            TextStyle(color: Color.fromRGBO(245, 15, 86, 100), fontSize: 48),
+                            TextStyle(color: Colors.white70, fontSize: 48, fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ],
                   ),
                 ),
+
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 61,
-                    right: 47,
-                    left: 47,
-                  ),
-                  child: Text(
-                    'Suas encomendas em um só lugar, de um jeito simples, rápido e fácil.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 69,
+                    top: size.height*0.2,
                   ),
                   child: CircularProgressIndicator(
                     value: null,
+
                     strokeWidth: 7.0,
                     backgroundColor: Colors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red)
                   ),
                 ),
               ],

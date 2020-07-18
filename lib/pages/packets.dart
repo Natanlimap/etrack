@@ -32,7 +32,7 @@ class _PacketsMainState extends State<PacketsMain> {
             Expanded(
               child: ListView(
                 children: <Widget>[
-                  packageItem(size, "Encomenda 1", "XYZ5E2GF5", "trajeto"),
+                  packageItem(size, "Encomenda 1", "XYZ5E2GF5", "em trajeto"),
                   packageItem(size, "Growth", "XXXXXYYY2", "entregue"),
                   packageItem(size, "Roupas", "JJJ2222", "postado"),
                   packageItem(size, "Oculos", "VVVVVVV", "entregue"),
@@ -61,7 +61,7 @@ Widget packageItem(
                 leading: Icon(Icons.markunread_mailbox),
                 title: Text(title),
                 subtitle: Text(
-                  "Codigo: " + trackingcode,
+                  "Codigo: " + trackingcode.toUpperCase(),
                   style: TextStyle(fontSize: 12),
                 ),
                 trailing: Icon(Icons.close),
@@ -80,7 +80,7 @@ Widget packageItem(
               height: size.height * 0.05,
               child: Center(
                 child: Text(
-                  "OBJETO EM TRAJETO",
+                  "OBJETO " + status.toUpperCase(),
                   style: TextStyle(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
@@ -106,7 +106,7 @@ Widget packageLineStatus(Size size, String status) {
       fonttrajeto = Colors.white;
 
       break;
-    case "trajeto":
+    case "em trajeto":
       trajeto = Colors.green;
       entregue = Colors.grey;
       fontentregue = Colors.white;
