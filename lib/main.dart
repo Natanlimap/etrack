@@ -1,3 +1,4 @@
+
 import 'package:etrack/pages/first_screen.dart';
 import 'package:etrack/pages/packets.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +13,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-
+      debugShowCheckedModeBanner: false,
       home: Firstscreen(),
     );
   }
