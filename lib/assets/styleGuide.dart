@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 
-Color primaryPink = Color.fromRGBO(245, 51, 111, 100);
+Color primaryPink = Color(0xffF50F56);
 
-Color primaryOrange = Color.fromRGBO(254, 123, 67, 100);
+Color primaryOrange = Color(0xffFE7A44);
 
-Color green = Color.fromRGBO(30, 174, 62, 100);
+Color green = Color.fromRGBO(30, 174, 62, 1);
 
 AssetImage logo = AssetImage("Logo.png");
 

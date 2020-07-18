@@ -1,3 +1,4 @@
+import 'package:etrack/assets/gradient.dart';
 import 'package:etrack/data/getSavedPackages.dart';
 import 'package:etrack/models/package_model.dart';
 import 'package:etrack/services/correios.dart';
@@ -19,6 +20,18 @@ abstract class _HomeControllerBase with Store{
     if(status != "error"){
       listItems[listItems.length - 1].setStatus(status);
       listItems.toSet();
+
+      switch (status){
+        case "Aguardando":
+          print("entrei");
+          listItems[listItems.length - 1].setCardStatus(waiting());
+          break;
+        case "Objeto encaminhado":
+          listItems[listItems.length - 1].setCardStatus(fowarded());
+          break;
+        case "Objeto entregue":
+          listItems[listItems.length - 1].setCardStatus(delivered());
+      }
     }
     attListInPref(listItems);
   }
