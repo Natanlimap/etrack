@@ -21,7 +21,7 @@ class _PacketsMainState extends State<PacketsMain> {
   void getStatus() async{
     for(Package pack in clientepackagelist){
 
-      pack.status = await rastrear(pack.code);
+      pack.status = await callCorreiosRastreamento(pack.code);
     }
     setState(() {
       clientepackagelist = clientepackagelist;
@@ -108,7 +108,7 @@ class _PacketsMainState extends State<PacketsMain> {
                   leading: Icon(Icons.markunread_mailbox),
                   title: Text(title),
                   subtitle: Text(
-                    "Codigo: " + trackingcode.toUpperCase(),
+                    "Codigo: " + trackingcode,
                     style: TextStyle(fontSize: 12),
                   ),
                   trailing: GestureDetector(
@@ -135,7 +135,7 @@ class _PacketsMainState extends State<PacketsMain> {
                 height: size.height * 0.05,
                 child: Center(
                   child: Text(
-                    status.toUpperCase(),
+                    status,
                     style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
