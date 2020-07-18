@@ -39,6 +39,26 @@ class _PacketsMainState extends State<PacketsMain> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+
+    _displayDialogForvalidate(BuildContext context) async{
+      return showDialog(
+
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Insira um código válido primeiro', style: TextStyle(color: primaryOrange),),
+
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text('Ok', style: TextStyle(color: primaryOrange),),
+                  onPressed: () async{
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          });
+    }
     _displayDialog(BuildContext context) async {
 
       var model = PackageModel();
@@ -48,14 +68,14 @@ class _PacketsMainState extends State<PacketsMain> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              title: Text('Novo pacote'),
+              title: Text('Novo pacote', style: TextStyle(color: primaryOrange)),
               content: TextField(
                 onChanged: model.setTitle,
-                decoration: InputDecoration(hintText: "Insira o nome do pacote"),
+                decoration: InputDecoration(hintText: "Insira o nome do pacote" ),
               ),
               actions: <Widget>[
                 new FlatButton(
-                  child: new Text('CONFIRMAR'),
+                  child: new Text('CONFIRMAR', style: TextStyle(color: primaryOrange)),
                   onPressed: () async{
                     model.setCode(codeController.text);
                     controller.addItem(model);
@@ -64,7 +84,7 @@ class _PacketsMainState extends State<PacketsMain> {
                   },
                 ),
                 new FlatButton(
-                  child: new Text('CANCELAR'),
+                  child: new Text('CANCELAR', style: TextStyle(color: primaryOrange)),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
@@ -79,7 +99,13 @@ class _PacketsMainState extends State<PacketsMain> {
         floatingActionButton: FloatingActionButton(
             backgroundColor: primaryOrange,
             child: Icon(Icons.add),
-            onPressed: ()=> _displayDialog(context)
+            onPressed: ()=>{
+              if(codeController.text == ''){
+                _displayDialogForvalidate(context),
+              }else{
+                _displayDialog(context),
+              }
+            }
         ),
         body: Column(
           children: <Widget>[
@@ -120,7 +146,7 @@ class _PacketsMainState extends State<PacketsMain> {
                     Container(
                       height: size.height * 0.1,
                       child: ListTile(
-                        leading: Image(image: boxImage),
+                        leading: Image(image: AssetImage("./assets/images/Caixa.png"),  height: size.height*0.05,),
                         title: Text(pack.title),
                         subtitle: Text(
                           "Codigo: " + pack.code,
@@ -165,6 +191,7 @@ class _PacketsMainState extends State<PacketsMain> {
 
 //widget that recieves the package status and return it visually
 Widget packageLineStatus(Size size, String status) {
+  Color postado;
   Color trajeto;
   Color entregue;
   Color fontentregue;
@@ -172,6 +199,7 @@ Widget packageLineStatus(Size size, String status) {
   //changing the color as of package status
   switch (status) {
     case "Objeto postado":
+      postado = primaryOrange;
       trajeto = Colors.grey;
       entregue = Colors.grey;
       fontentregue = Colors.white;
@@ -179,6 +207,7 @@ Widget packageLineStatus(Size size, String status) {
 
       break;
     case "Objeto encaminhado":
+      postado = primaryOrange;
       trajeto = primaryOrange;
       entregue = Colors.grey;
       fontentregue = Colors.white;
@@ -186,6 +215,8 @@ Widget packageLineStatus(Size size, String status) {
       break;
 
     case "Objeto entregue ao destinatário":
+
+      postado = primaryOrange;
       trajeto = primaryOrange;
       entregue = primaryOrange;
       fontentregue = Colors.black54;
@@ -193,6 +224,7 @@ Widget packageLineStatus(Size size, String status) {
       break;
 
     default:
+      postado = Colors.grey;
       trajeto = Colors.grey;
       entregue = Colors.grey;
       break;
@@ -207,7 +239,7 @@ Widget packageLineStatus(Size size, String status) {
             width: 15,
             height: 15,
             decoration: BoxDecoration(
-                color: primaryOrange, borderRadius: BorderRadius.circular(100)),
+                color: postado, borderRadius: BorderRadius.circular(100)),
           ),
           Container(
             width: size.width * 0.3,
