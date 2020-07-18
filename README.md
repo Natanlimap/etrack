@@ -17,10 +17,19 @@ Em algum momento da sua vida você já parou para ver onde suas encomendas estã
 
 Algumas imagens do aplicativo em funcionamento:
 
+<div align="left">
+  
+ <img  width="200" height="400" src="https://i.ibb.co/3dr6882/flutter-04.png"><span style="padding-left:30px"></span>
+ <img  width="200" height="400" src="https://i.ibb.co/RcLkxRM/flutter-03.png"><span style="padding-left:30px"></span>
 
-## API - Créditos 
-
-A **Api** que estamos utilizando pertence a **Linketrack**, disponivel em: https://linketrack.com/api
+</div>
+                                                                                                                                                      
 
 ## Instalação
 
+ [Em Desenvolvimento]()
+
+## Créditos 
+
+- A **Api** que estamos utilizando pertence a **Linketrack**, disponivel em: https://linketrack.com/api.
+- Foi utilizado o mobx para o tratamento de estados.
