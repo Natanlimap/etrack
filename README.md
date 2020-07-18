@@ -21,13 +21,17 @@ Algumas imagens do aplicativo em funcionamento:
   
  <img  width="200" height="400" src="https://i.ibb.co/3dr6882/flutter-04.png"><span style="padding-left:30px"></span>
  <img  width="200" height="400" src="https://i.ibb.co/RcLkxRM/flutter-03.png"><span style="padding-left:30px"></span>
-
+ <img  width="200" height="400" src="https://media.giphy.com/media/SwmoPr2T8Hi4dsp0Ws/giphy.gif"><span style="padding-left:30px"></span>
 </div>
                                                                                                                                                       
 
 ## Instalação
 
  [Em Desenvolvimento]()
+
+## Desenvolvedores e Designers
+
+
 
 ## Créditos 
 
