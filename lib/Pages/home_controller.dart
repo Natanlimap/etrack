@@ -15,13 +15,15 @@ abstract class _HomeControllerBase with Store{
 
   @action
   addItem(PackageModel pack) async{
+    listItems.add(pack);
     String status = await getCorreiosRastreamento(pack.code);
     if(status != "error"){
-      pack.setStatus(status);
-      listItems.add(pack);
+      listItems[listItems.length - 1].setStatus(status);
+      listItems.toSet();
     }
 
   }
+
 
   @action
   removeItem(PackageModel pack){

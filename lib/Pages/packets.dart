@@ -114,51 +114,55 @@ class _PacketsMainState extends State<PacketsMain> {
   Widget packageItem(
 
       Size size, PackageModel pack) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Card(
-          elevation: 10,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: size.height * 0.1,
-                child: ListTile(
-                  leading: Icon(Icons.markunread_mailbox),
-                  title: Text(pack.title),
-                  subtitle: Text(
-                    "Codigo: " + pack.code,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  trailing: GestureDetector(
-                    onTap: (){
-                      controller.removeItem(pack);
-                    },
-                    child: Icon(Icons.close),
-                  ),
-                ),
-              ),
+    return Observer(
+        builder: (_) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+                elevation: 10,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: size.height * 0.1,
+                      child: ListTile(
+                        leading: Icon(Icons.markunread_mailbox),
+                        title: Text(pack.title),
+                        subtitle: Text(
+                          "Codigo: " + pack.code,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            controller.removeItem(pack);
+                          },
+                          child: Icon(Icons.close),
+                        ),
+                      ),
+                    ),
 
-              //package status line
-              Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: packageLineStatus(size, pack.status),
-              ),
+                    //package status line
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: packageLineStatus(size, pack.status),
+                    ),
 
-              //bottom card section
-              Container(
-                color: Colors.redAccent,
-                height: size.height * 0.05,
-                child: Center(
-                  child: Text(
-                    pack.status,
-                   style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
-            ],
-          )),
-    );
+                    //bottom card section
+                    Container(
+                      color: Colors.redAccent,
+                      height: size.height * 0.05,
+                      child: Center(
+                        child: Text(
+                          pack.status,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          );
+          }
+          );
   }
 }
 
