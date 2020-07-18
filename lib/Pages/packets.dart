@@ -2,7 +2,6 @@ import 'package:etrack/classes/package.dart';
 import 'package:etrack/services/correios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 TextEditingController codeController = TextEditingController();
 TextEditingController nameController = TextEditingController();
@@ -20,8 +19,7 @@ class _PacketsMainState extends State<PacketsMain> {
 
   void getStatus() async{
     for(Package pack in clientepackagelist){
-
-      pack.status = await callCorreiosRastreamento(pack.code);
+      getCorreiosRastreamento();
     }
     setState(() {
       clientepackagelist = clientepackagelist;
@@ -135,8 +133,8 @@ class _PacketsMainState extends State<PacketsMain> {
                 height: size.height * 0.05,
                 child: Center(
                   child: Text(
-                    status,
-                    style: TextStyle(
+                    "dwdw",
+                   style: TextStyle(
                         color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -157,7 +155,7 @@ Widget packageLineStatus(Size size, String status) {
   Color fonttrajeto;
   //changing the color as of package status
   switch (status) {
-    case "OBJETO POSTADO":
+    case "postado":
       trajeto = Colors.grey;
       entregue = Colors.grey;
       fontentregue = Colors.white;

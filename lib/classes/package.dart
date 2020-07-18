@@ -1,7 +1,4 @@
 
-
-import 'package:etrack/services/correios.dart';
-
 class Package{
 
   String name;
