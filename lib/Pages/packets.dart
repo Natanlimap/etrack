@@ -14,13 +14,19 @@ TextEditingController codeController = TextEditingController();
 TextEditingController nameController = TextEditingController();
 List<Package> clientepackagelist = List();
 
+
+
+
 class PacketsMain extends StatefulWidget {
   @override
   _PacketsMainState createState() => _PacketsMainState();
 }
 
 class _PacketsMainState extends State<PacketsMain> {
+
+
   final controller = HomeController();
+
 
   @override
   void initState() {
@@ -28,42 +34,39 @@ class _PacketsMainState extends State<PacketsMain> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     _displayDialog(BuildContext context) async {
+
       var model = PackageModel();
 
       return showDialog(
+
           context: context,
           builder: (context) {
             return AlertDialog(
               title: Text('Novo pacote'),
               content: TextField(
                 onChanged: model.setTitle,
-                decoration:
-                    InputDecoration(hintText: "Insira o nome do pacote"),
+                decoration: InputDecoration(hintText: "Insira o nome do pacote"),
               ),
               actions: <Widget>[
                 new FlatButton(
                   child: new Text('CONFIRMAR'),
-                  onPressed: () async {
+                  onPressed: () async{
                     model.setCode(codeController.text);
                     controller.addItem(model);
+
                     Navigator.of(context).pop();
-                    codeController.clear();
-                    nameController.clear();
-                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 ),
                 new FlatButton(
                   child: new Text('CANCELAR'),
-                  onPressed: () async {
+                  onPressed: () {
                     Navigator.of(context).pop();
-                    codeController.clear();
-                    nameController.clear();
-                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 )
               ],
@@ -72,11 +75,11 @@ class _PacketsMainState extends State<PacketsMain> {
     }
 
     return MaterialApp(
-        home: Scaffold(
+      home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: primaryOrange,
-          child: Icon(Icons.add),
-          onPressed: ()=> _displayDialog(context)
+            backgroundColor: primaryOrange,
+            child: Icon(Icons.add),
+            onPressed: ()=> _displayDialog(context)
         ),
         body: Column(
           children: <Widget>[
@@ -85,14 +88,15 @@ class _PacketsMainState extends State<PacketsMain> {
             //package list
             Expanded(
               child: Observer(
-                builder: (_) {
+                builder: (_){
                   return ListView.builder(
-                    padding: EdgeInsets.only(top: 12),
+                      padding: EdgeInsets.only(top: 12),
                       itemCount: controller.listItems.length,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (context, index){
                         var item = controller.listItems[index];
                         return packageItem(size, item);
-                      });
+                      }
+                  );
                 },
               ),
             )
@@ -101,6 +105,7 @@ class _PacketsMainState extends State<PacketsMain> {
       ),
     );
   }
+  Widget packageItem(
 
       Size size, PackageModel pack) {
 
@@ -129,14 +134,12 @@ class _PacketsMainState extends State<PacketsMain> {
                         ),
                       ),
                     ),
-                    trailing: GestureDetector(
-                      onTap: () {
-                        controller.removeItem(pack);
-                      },
-                      child: Icon(Icons.close),
+
+                    //package status line
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: packageLineStatus(size, pack.status),
                     ),
-                  ),
-                ),
 
                     //bottom card section
                     Container(
@@ -153,10 +156,12 @@ class _PacketsMainState extends State<PacketsMain> {
                   ],
                 )),
           );
-          }
-          );
+        }
+    );
   }
 }
+
+
 
 //widget that recieves the package status and return it visually
 Widget packageLineStatus(Size size, String status) {
@@ -235,19 +240,31 @@ Widget packageLineStatus(Size size, String status) {
       Padding(
         padding: EdgeInsets.only(top: 10, left: 20, right: 20),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment:  MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               "Objeto postado",
-              style: TextStyle(color: Colors.black54, fontSize: 8),
+              style: TextStyle(
+                  color: Colors.black54,
+                  fontSize: 8
+              ),
+
             ),
             Text(
               "Objeto em trajeto",
-              style: TextStyle(color: fonttrajeto, fontSize: 8),
+              style: TextStyle(
+                  color: fonttrajeto,
+                  fontSize: 8
+              ),
+
             ),
             Text(
               "Objeto entregue",
-              style: TextStyle(color: fontentregue, fontSize: 8),
+              style: TextStyle(
+                  color: fontentregue,
+                  fontSize: 8
+              ),
+
             ),
           ],
         ),
