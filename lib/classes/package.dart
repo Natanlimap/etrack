@@ -5,7 +5,7 @@ class Package{
   String code;
   String status;
   Package(this.code, this.name){
-    status = "postado";
+    status = "Aguardando";
   }
 
 }
