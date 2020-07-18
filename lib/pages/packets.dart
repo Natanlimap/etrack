@@ -1,8 +1,10 @@
 import 'package:etrack/classes/package.dart';
+import 'package:etrack/models/package_model.dart';
+import 'package:etrack/pages/home_controller.dart';
 import 'package:etrack/services/correios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 TextEditingController codeController = TextEditingController();
 TextEditingController nameController = TextEditingController();
@@ -18,10 +20,15 @@ class PacketsMain extends StatefulWidget {
 
 class _PacketsMainState extends State<PacketsMain> {
 
+
+  final controller = HomeController();
+
   void getStatus() async{
     for(Package pack in clientepackagelist){
-
-      pack.status = await callCorreiosRastreamento(pack.code);
+      pack.status = await getCorreiosRastreamento(pack.code);
+      if(pack.status == null){
+        clientepackagelist.remove(pack);
+      }
     }
     setState(() {
       clientepackagelist = clientepackagelist;
@@ -40,21 +47,26 @@ class _PacketsMainState extends State<PacketsMain> {
     Size size = MediaQuery.of(context).size;
 
     _displayDialog(BuildContext context) async {
+
+      var model = PackageModel();
+      
       return showDialog(
+
           context: context,
           builder: (context) {
             return AlertDialog(
               title: Text('Novo pacote'),
               content: TextField(
-                controller: nameController,
+                onChanged: model.setTitle,
                 decoration: InputDecoration(hintText: "Insira o nome do pacote"),
               ),
               actions: <Widget>[
                 new FlatButton(
                   child: new Text('CONFIRMAR'),
-                  onPressed: () {
-                    clientepackagelist.add(Package(codeController.text, nameController.text));
-                    getStatus();
+                  onPressed: () async{
+                    model.setCode(codeController.text);
+                    controller.addItem(model);
+
                     Navigator.of(context).pop();
                   },
                 ),
@@ -82,12 +94,17 @@ class _PacketsMainState extends State<PacketsMain> {
 
             //package list
             Expanded(
-              child: ListView.builder(
-                itemCount: clientepackagelist.length,
-                itemBuilder: (context, index){
-                  return packageItem(size, clientepackagelist[index].name, clientepackagelist[index].code, clientepackagelist[index].status, index);
-                }
-            ),
+              child: Observer(
+                builder: (_){
+                  return ListView.builder(
+                      itemCount: controller.listItems.length,
+                      itemBuilder: (context, index){
+                        var item = controller.listItems[index];
+                        return packageItem(size, item);
+                      }
+                  );
+                },
+              ),
             )
           ],
         ),
@@ -95,55 +112,57 @@ class _PacketsMainState extends State<PacketsMain> {
     );
   }
   Widget packageItem(
-      Size size, String title, String trackingcode, String status, index) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
-      child: Card(
-          elevation: 10,
-          child: Column(
-            children: <Widget>[
-              Container(
-                height: size.height * 0.1,
-                child: ListTile(
-                  leading: Icon(Icons.markunread_mailbox),
-                  title: Text(title),
-                  subtitle: Text(
-                    "Codigo: " + trackingcode,
-                    style: TextStyle(fontSize: 12),
-                  ),
-                  trailing: GestureDetector(
-                    onTap: (){
-                      setState(() {
-                        clientepackagelist.removeAt(index);
 
-                      });
-                    },
-                    child: Icon(Icons.close),
-                  ),
-                ),
-              ),
+      Size size, PackageModel pack) {
+    return Observer(
+        builder: (_) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+                elevation: 10,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: size.height * 0.1,
+                      child: ListTile(
+                        leading: Icon(Icons.markunread_mailbox),
+                        title: Text(pack.title),
+                        subtitle: Text(
+                          "Codigo: " + pack.code,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            controller.removeItem(pack);
+                          },
+                          child: Icon(Icons.close),
+                        ),
+                      ),
+                    ),
 
-              //package status line
-              Padding(
-                padding: EdgeInsets.only(bottom: 15),
-                child: packageLineStatus(size, status),
-              ),
+                    //package status line
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: packageLineStatus(size, pack.status),
+                    ),
 
-              //bottom card section
-              Container(
-                color: Colors.redAccent,
-                height: size.height * 0.05,
-                child: Center(
-                  child: Text(
-                    status,
-                    style: TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              )
-            ],
-          )),
-    );
+                    //bottom card section
+                    Container(
+                      color: Colors.redAccent,
+                      height: size.height * 0.05,
+                      child: Center(
+                        child: Text(
+                          pack.status,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          );
+          }
+          );
   }
 }
 
@@ -157,21 +176,21 @@ Widget packageLineStatus(Size size, String status) {
   Color fonttrajeto;
   //changing the color as of package status
   switch (status) {
-    case "OBJETO POSTADO":
+    case "Objeto postado":
       trajeto = Colors.grey;
       entregue = Colors.grey;
       fontentregue = Colors.white;
       fonttrajeto = Colors.white;
 
       break;
-    case "OBJETO EM TRAGETO":
+    case "Objeto encaminhado":
       trajeto = Colors.green;
       entregue = Colors.grey;
       fontentregue = Colors.white;
       fonttrajeto = Colors.black54;
       break;
 
-    case "OBJETO ENTREGUE":
+    case "Objeto entregue ao destinatário":
       trajeto = Colors.green;
       entregue = Colors.green;
       fontentregue = Colors.black54;
@@ -179,8 +198,8 @@ Widget packageLineStatus(Size size, String status) {
       break;
 
     default:
-      trajeto = Colors.redAccent;
-      entregue = Colors.redAccent;
+      trajeto = Colors.grey;
+      entregue = Colors.grey;
       break;
   }
 

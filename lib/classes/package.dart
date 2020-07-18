@@ -1,14 +1,8 @@
-
-
-import 'package:etrack/services/correios.dart';
-
-class Package{
-
+class Package {
   String name;
   String code;
   String status;
-  Package(this.code, this.name){
-    status = "postado";
+  Package(this.code, this.name) {
+    status = "Aguardando";
   }
-
 }
