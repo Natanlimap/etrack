@@ -1,6 +1,9 @@
+import 'package:etrack/assets/styleGuide.dart';
 import 'package:etrack/classes/package.dart';
+import 'package:etrack/data/getSavedPackages.dart';
+import 'package:etrack/data/sharedpreferences.dart';
 import 'package:etrack/models/package_model.dart';
-import 'package:etrack/pages/home_controller.dart';
+import 'package:etrack/models/home_controller.dart';
 import 'package:etrack/services/correios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,21 +26,10 @@ class _PacketsMainState extends State<PacketsMain> {
 
   final controller = HomeController();
 
-  void getStatus() async{
-    for(Package pack in clientepackagelist){
-      pack.status = await getCorreiosRastreamento(pack.code);
-      if(pack.status == null){
-        clientepackagelist.remove(pack);
-      }
-    }
-    setState(() {
-      clientepackagelist = clientepackagelist;
-    });
-  }
 
   @override
   void initState() {
-    getStatus();
+    sharedDataToPackage(controller);
     super.initState();
   }
 
@@ -125,7 +117,7 @@ class _PacketsMainState extends State<PacketsMain> {
                     Container(
                       height: size.height * 0.1,
                       child: ListTile(
-                        leading: Icon(Icons.markunread_mailbox),
+                        leading: Image(image: boxImage),
                         title: Text(pack.title),
                         subtitle: Text(
                           "Codigo: " + pack.code,

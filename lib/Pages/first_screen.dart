@@ -20,15 +20,14 @@ class _FirstscreenState extends State<Firstscreen> {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), pageNavigation);
+    Timer(const Duration(seconds: 2), pageNavigation);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
 
-
     Size size = MediaQuery.of(context).size;
-
+    
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -46,7 +45,7 @@ class _FirstscreenState extends State<Firstscreen> {
               children: <Widget>[
                 Padding(
                   padding: EdgeInsets.only(top: size.height*0.3),
-                  child: Image(image: AssetImage("assets/images/icon.png"),width: size.width*0.3,)
+                  child: Image(image: AssetImage("assets/images/Caixa.png"),width: size.width*0.3,)
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 5),
