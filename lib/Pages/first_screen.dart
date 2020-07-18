@@ -46,12 +46,16 @@ class _FirstscreenState extends State<Firstscreen> {
                   padding: EdgeInsets.only(
                     top: size.height*0.2,
                   ),
-                  child: CircularProgressIndicator(
-                    value: null,
+                ),
+                SizedBox(
+                    height: 191,
+                    width: 191,
+                    child: CircularProgressIndicator(
+                      value: null,
+                      strokeWidth: 10.0,
+                      backgroundColor: Colors.white,
+                      valueColor: AlwaysStoppedAnimation<Color>(Color(0xffFE7B43))
 
-                    strokeWidth: 7.0,
-                    backgroundColor: Colors.white,
-                    valueColor: AlwaysStoppedAnimation<Color>(primaryPink)
                   ),
                 ),
               ],
