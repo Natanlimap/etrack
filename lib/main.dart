@@ -1,4 +1,4 @@
-import 'package:etrack/Pages/first_screen.dart';
+import 'package:etrack/pages/first_screen.dart';
 import 'package:etrack/pages/packets.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
 
-      home: PacketsMain(),
+      home: Firstscreen(),
     );
   }
 }
