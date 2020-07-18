@@ -1,6 +1,5 @@
 
 import 'package:etrack/pages/first_screen.dart';
-import 'package:etrack/pages/packets.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
