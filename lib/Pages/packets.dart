@@ -1,6 +1,10 @@
+import 'package:etrack/assets/gradient.dart';
+import 'package:etrack/assets/styleGuide.dart';
 import 'package:etrack/classes/package.dart';
+import 'package:etrack/data/getSavedPackages.dart';
+import 'package:etrack/data/sharedpreferences.dart';
 import 'package:etrack/models/package_model.dart';
-import 'package:etrack/pages/home_controller.dart';
+import 'package:etrack/models/home_controller.dart';
 import 'package:etrack/services/correios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,21 +22,9 @@ class PacketsMain extends StatefulWidget {
 class _PacketsMainState extends State<PacketsMain> {
   final controller = HomeController();
 
-  void getStatus() async {
-    for (Package pack in clientepackagelist) {
-      pack.status = await getCorreiosRastreamento(pack.code);
-      if (pack.status == null) {
-        clientepackagelist.remove(pack);
-      }
-    }
-    setState(() {
-      clientepackagelist = clientepackagelist;
-    });
-  }
-
   @override
   void initState() {
-    getStatus();
+    sharedDataToPackage(controller);
     super.initState();
   }
 
@@ -80,11 +72,12 @@ class _PacketsMainState extends State<PacketsMain> {
     }
 
     return MaterialApp(
-      home: Scaffold(
+        home: Scaffold(
         floatingActionButton: FloatingActionButton(
-            backgroundColor: Colors.redAccent,
-            child: Icon(Icons.add),
-            onPressed: () => _displayDialog(context)),
+          backgroundColor: primaryOrange,
+          child: Icon(Icons.add),
+          onPressed: ()=> _displayDialog(context)
+        ),
         body: Column(
           children: <Widget>[
             customAppBar(size),
@@ -94,6 +87,7 @@ class _PacketsMainState extends State<PacketsMain> {
               child: Observer(
                 builder: (_) {
                   return ListView.builder(
+                    padding: EdgeInsets.only(top: 12),
                       itemCount: controller.listItems.length,
                       itemBuilder: (context, index) {
                         var item = controller.listItems[index];
@@ -108,22 +102,32 @@ class _PacketsMainState extends State<PacketsMain> {
     );
   }
 
-  Widget packageItem(Size size, PackageModel pack) {
-    return Observer(builder: (_) {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        child: Card(
-            elevation: 10,
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: size.height * 0.1,
-                  child: ListTile(
-                    leading: Icon(Icons.markunread_mailbox),
-                    title: Text(pack.title),
-                    subtitle: Text(
-                      "Codigo: " + pack.code,
-                      style: TextStyle(fontSize: 12),
+      Size size, PackageModel pack) {
+
+    return Observer(
+        builder: (_) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+                elevation: 10,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: size.height * 0.1,
+                      child: ListTile(
+                        leading: Image(image: boxImage),
+                        title: Text(pack.title),
+                        subtitle: Text(
+                          "Codigo: " + pack.code,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            controller.removeItem(pack);
+                          },
+                          child: Icon(Icons.close),
+                        ),
+                      ),
                     ),
                     trailing: GestureDetector(
                       onTap: () {
@@ -134,28 +138,23 @@ class _PacketsMainState extends State<PacketsMain> {
                   ),
                 ),
 
-                //package status line
-                Padding(
-                  padding: EdgeInsets.only(bottom: 15),
-                  child: packageLineStatus(size, pack.status),
-                ),
-
-                //bottom card section
-                Container(
-                  color: Colors.redAccent,
-                  height: size.height * 0.05,
-                  child: Center(
-                    child: Text(
-                      pack.status,
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                )
-              ],
-            )),
-      );
-    });
+                    //bottom card section
+                    Container(
+                      decoration: pack.cardStatus,
+                      height: size.height * 0.05,
+                      child: Center(
+                        child: Text(
+                          pack.status,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          );
+          }
+          );
   }
 }
 
@@ -175,15 +174,15 @@ Widget packageLineStatus(Size size, String status) {
 
       break;
     case "Objeto encaminhado":
-      trajeto = Colors.green;
+      trajeto = primaryOrange;
       entregue = Colors.grey;
       fontentregue = Colors.white;
       fonttrajeto = Colors.black54;
       break;
 
     case "Objeto entregue ao destinatário":
-      trajeto = Colors.green;
-      entregue = Colors.green;
+      trajeto = primaryOrange;
+      entregue = primaryOrange;
       fontentregue = Colors.black54;
       fonttrajeto = Colors.black54;
       break;
@@ -203,7 +202,7 @@ Widget packageLineStatus(Size size, String status) {
             width: 15,
             height: 15,
             decoration: BoxDecoration(
-                color: Colors.green, borderRadius: BorderRadius.circular(100)),
+                color: primaryOrange, borderRadius: BorderRadius.circular(100)),
           ),
           Container(
             width: size.width * 0.3,
@@ -267,7 +266,11 @@ Widget customAppBar(Size size) {
           padding: EdgeInsets.only(left: 20, bottom: 50),
           height: size.height * 0.3 - 27,
           decoration: BoxDecoration(
-              color: Colors.redAccent,
+              gradient: LinearGradient(
+                colors: [primaryPink, primaryOrange],
+                end: Alignment.bottomCenter,
+                begin: Alignment.topCenter,
+              ),
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(36),
                   bottomLeft: Radius.circular(36))),
