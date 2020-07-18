@@ -1,4 +1,7 @@
+import 'package:etrack/pages/packets.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 class Firstscreen extends StatefulWidget {
   @override
@@ -6,8 +9,24 @@ class Firstscreen extends StatefulWidget {
 }
 
 class _FirstscreenState extends State<Firstscreen> {
+
+  void pageNavigation(){
+   Navigator.push(
+     context, CupertinoPageRoute(builder: (context) => PacketsMain()),
+   );
+  }
+
+  @override
+  void initState() {
+    Timer(const Duration(seconds: 3), pageNavigation);
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+
+
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
@@ -24,73 +43,43 @@ class _FirstscreenState extends State<Firstscreen> {
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 101),
-                  child: Image.asset('lib/assets/Logo.png')
+                  padding: EdgeInsets.only(top: size.height*0.3),
+                  child: Image(image: AssetImage("assets/images/icon.png"),width: size.width*0.3,)
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 16),
+                  padding: EdgeInsets.only(top: 5),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Text(
                         'E-',
-                        style: TextStyle(fontSize: 48),
+                        style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white70
+                        ),
                       ),
                       Text(
                         'Track',
-                        style: TextStyle(
-                            color: Color.fromRGBO(245, 15, 86, 100),
-                            fontSize: 48),
+                        style:
+                            TextStyle(color: Colors.white70, fontSize: 48, fontWeight: FontWeight.bold,
+                            ),
                       ),
                     ],
                   ),
                 ),
+
                 Padding(
                   padding: EdgeInsets.only(
-                    top: 48,
-                    right: 47,
-                    left: 47,
+                    top: size.height*0.2,
                   ),
-                  child: Text(
-                    'Suas encomendas em um só lugar, de um jeito simples, rápido e fácil.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28,
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: 48,
-                  ),
-                ),
-                SizedBox(
-                  height: 200,
-                  child: Stack(
-                    children: <Widget>[
-                      Center(
-                        child: Container(
-                          width: 160,
-                          height: 160,
-                          child: new CircularProgressIndicator(
-                            strokeWidth: 7.0,
-                            value: null,
-                            backgroundColor: Colors.white,
-                            valueColor: new AlwaysStoppedAnimation<Color>(Color.fromRGBO(254, 123, 67, 100)),
-                          ),
-                        ),
-                      ),
-                      Center(child: 
-                      Text(
-                        'CARREGANDO...',
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: Colors.white,
-                        ),
-                      ),
-                      )
-                    ],
+                  child: CircularProgressIndicator(
+                    value: null,
+
+                    strokeWidth: 7.0,
+                    backgroundColor: Colors.white,
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red)
                   ),
                 ),
               ],
