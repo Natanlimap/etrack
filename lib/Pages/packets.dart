@@ -10,23 +10,18 @@ TextEditingController codeController = TextEditingController();
 TextEditingController nameController = TextEditingController();
 List<Package> clientepackagelist = List();
 
-
-
-
 class PacketsMain extends StatefulWidget {
   @override
   _PacketsMainState createState() => _PacketsMainState();
 }
 
 class _PacketsMainState extends State<PacketsMain> {
-
-
   final controller = HomeController();
 
-  void getStatus() async{
-    for(Package pack in clientepackagelist){
+  void getStatus() async {
+    for (Package pack in clientepackagelist) {
       pack.status = await getCorreiosRastreamento(pack.code);
-      if(pack.status == null){
+      if (pack.status == null) {
         clientepackagelist.remove(pack);
       }
     }
@@ -41,39 +36,42 @@ class _PacketsMainState extends State<PacketsMain> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     _displayDialog(BuildContext context) async {
-
       var model = PackageModel();
-      
-      return showDialog(
 
+      return showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
               title: Text('Novo pacote'),
               content: TextField(
                 onChanged: model.setTitle,
-                decoration: InputDecoration(hintText: "Insira o nome do pacote"),
+                decoration:
+                    InputDecoration(hintText: "Insira o nome do pacote"),
               ),
               actions: <Widget>[
                 new FlatButton(
                   child: new Text('CONFIRMAR'),
-                  onPressed: () async{
+                  onPressed: () async {
                     model.setCode(codeController.text);
                     controller.addItem(model);
-
                     Navigator.of(context).pop();
+                    codeController.clear();
+                    nameController.clear();
+                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 ),
                 new FlatButton(
                   child: new Text('CANCELAR'),
-                  onPressed: () {
+                  onPressed: () async {
                     Navigator.of(context).pop();
+                    codeController.clear();
+                    nameController.clear();
+                    FocusScope.of(context).requestFocus(new FocusNode());
                   },
                 )
               ],
@@ -84,10 +82,9 @@ class _PacketsMainState extends State<PacketsMain> {
     return MaterialApp(
       home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.redAccent,
-          child: Icon(Icons.add),
-          onPressed: ()=> _displayDialog(context)
-        ),
+            backgroundColor: Colors.redAccent,
+            child: Icon(Icons.add),
+            onPressed: () => _displayDialog(context)),
         body: Column(
           children: <Widget>[
             customAppBar(size),
@@ -95,14 +92,13 @@ class _PacketsMainState extends State<PacketsMain> {
             //package list
             Expanded(
               child: Observer(
-                builder: (_){
+                builder: (_) {
                   return ListView.builder(
                       itemCount: controller.listItems.length,
-                      itemBuilder: (context, index){
+                      itemBuilder: (context, index) {
                         var item = controller.listItems[index];
                         return packageItem(size, item);
-                      }
-                  );
+                      });
                 },
               ),
             )
@@ -111,62 +107,57 @@ class _PacketsMainState extends State<PacketsMain> {
       ),
     );
   }
-  Widget packageItem(
 
-      Size size, PackageModel pack) {
-    return Observer(
-        builder: (_) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Card(
-                elevation: 10,
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: size.height * 0.1,
-                      child: ListTile(
-                        leading: Icon(Icons.markunread_mailbox),
-                        title: Text(pack.title),
-                        subtitle: Text(
-                          "Codigo: " + pack.code,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                        trailing: GestureDetector(
-                          onTap: () {
-                            controller.removeItem(pack);
-                          },
-                          child: Icon(Icons.close),
-                        ),
-                      ),
+  Widget packageItem(Size size, PackageModel pack) {
+    return Observer(builder: (_) {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Card(
+            elevation: 10,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  height: size.height * 0.1,
+                  child: ListTile(
+                    leading: Icon(Icons.markunread_mailbox),
+                    title: Text(pack.title),
+                    subtitle: Text(
+                      "Codigo: " + pack.code,
+                      style: TextStyle(fontSize: 12),
                     ),
-
-                    //package status line
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 15),
-                      child: packageLineStatus(size, pack.status),
+                    trailing: GestureDetector(
+                      onTap: () {
+                        controller.removeItem(pack);
+                      },
+                      child: Icon(Icons.close),
                     ),
+                  ),
+                ),
 
-                    //bottom card section
-                    Container(
-                      color: Colors.redAccent,
-                      height: size.height * 0.05,
-                      child: Center(
-                        child: Text(
-                          pack.status,
-                          style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
-          );
-          }
-          );
+                //package status line
+                Padding(
+                  padding: EdgeInsets.only(bottom: 15),
+                  child: packageLineStatus(size, pack.status),
+                ),
+
+                //bottom card section
+                Container(
+                  color: Colors.redAccent,
+                  height: size.height * 0.05,
+                  child: Center(
+                    child: Text(
+                      pack.status,
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              ],
+            )),
+      );
+    });
   }
 }
-
-
 
 //widget that recieves the package status and return it visually
 Widget packageLineStatus(Size size, String status) {
@@ -245,31 +236,19 @@ Widget packageLineStatus(Size size, String status) {
       Padding(
         padding: EdgeInsets.only(top: 10, left: 20, right: 20),
         child: Row(
-          mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
               "Objeto postado",
-              style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 8
-              ),
-
+              style: TextStyle(color: Colors.black54, fontSize: 8),
             ),
             Text(
               "Objeto em trajeto",
-              style: TextStyle(
-                  color: fonttrajeto,
-                  fontSize: 8
-              ),
-
+              style: TextStyle(color: fonttrajeto, fontSize: 8),
             ),
             Text(
               "Objeto entregue",
-              style: TextStyle(
-                  color: fontentregue,
-                  fontSize: 8
-              ),
-
+              style: TextStyle(color: fontentregue, fontSize: 8),
             ),
           ],
         ),
