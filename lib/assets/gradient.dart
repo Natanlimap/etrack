@@ -15,7 +15,7 @@ BoxDecoration mainBackground(){
 
 BoxDecoration delivered(){
   return BoxDecoration(
-      color: green
+      color: primaryOrange
   );
 }
 BoxDecoration waiting(){

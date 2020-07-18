@@ -29,7 +29,7 @@ abstract class _HomeControllerBase with Store{
         case "Objeto encaminhado":
           listItems[listItems.length - 1].setCardStatus(fowarded());
           break;
-        case "Objeto entregue":
+        case "Objeto entregue ao destinatário":
           listItems[listItems.length - 1].setCardStatus(delivered());
       }
     }
