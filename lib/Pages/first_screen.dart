@@ -1,3 +1,5 @@
+import 'package:etrack/assets/gradient.dart';
+import 'package:etrack/assets/styleGuide.dart';
 import 'package:etrack/pages/packets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +12,8 @@ class Firstscreen extends StatefulWidget {
 
 class _FirstscreenState extends State<Firstscreen> {
 
+
+
   void pageNavigation(){
    Navigator.push(
      context, CupertinoPageRoute(builder: (context) => PacketsMain()),
@@ -18,7 +22,7 @@ class _FirstscreenState extends State<Firstscreen> {
 
   @override
   void initState() {
-    Timer(const Duration(seconds: 3), pageNavigation);
+    Timer(const Duration(seconds: 2), pageNavigation);
     super.initState();
   }
   @override
@@ -26,48 +30,16 @@ class _FirstscreenState extends State<Firstscreen> {
 
 
     Size size = MediaQuery.of(context).size;
-
+    
     return Scaffold(
       body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xffFE7B43),
-                Color(0xffF5336F),
-              ],
-            ),
-          ),
+          decoration: mainBackground(),
           child: Center(
             child: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: size.height*0.3),
-                  child: Image(image: AssetImage("assets/images/icon.png"),width: size.width*0.3,)
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 5),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'E-',
-                        style: TextStyle(
-                            fontSize: 48,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white70
-                        ),
-                      ),
-                      Text(
-                        'Track',
-                        style:
-                            TextStyle(color: Colors.white70, fontSize: 48, fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                    ],
-                  ),
+                  padding: EdgeInsets.only(top: size.height*0.2),
+                  child: Image(image: AssetImage("assets/images/Logo.png"),width: size.width*0.4,)
                 ),
 
                 Padding(
@@ -79,7 +51,7 @@ class _FirstscreenState extends State<Firstscreen> {
 
                     strokeWidth: 7.0,
                     backgroundColor: Colors.white,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.red)
+                    valueColor: AlwaysStoppedAnimation<Color>(primaryPink)
                   ),
                 ),
               ],

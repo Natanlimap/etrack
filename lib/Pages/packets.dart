@@ -1,7 +1,21 @@
+import 'package:etrack/assets/gradient.dart';
+import 'package:etrack/assets/styleGuide.dart';
+import 'package:etrack/classes/package.dart';
+import 'package:etrack/data/getSavedPackages.dart';
+import 'package:etrack/data/sharedpreferences.dart';
+import 'package:etrack/models/package_model.dart';
+import 'package:etrack/models/home_controller.dart';
+import 'package:etrack/services/correios.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 
 TextEditingController codeController = TextEditingController();
+TextEditingController nameController = TextEditingController();
+List<Package> clientepackagelist = List();
+
+
+
 
 class PacketsMain extends StatefulWidget {
   @override
@@ -11,18 +25,61 @@ class PacketsMain extends StatefulWidget {
 class _PacketsMainState extends State<PacketsMain> {
 
 
+  final controller = HomeController();
+
+
+  @override
+  void initState() {
+    sharedDataToPackage(controller);
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
+    _displayDialog(BuildContext context) async {
+
+      var model = PackageModel();
+      
+      return showDialog(
+
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              title: Text('Novo pacote'),
+              content: TextField(
+                onChanged: model.setTitle,
+                decoration: InputDecoration(hintText: "Insira o nome do pacote"),
+              ),
+              actions: <Widget>[
+                new FlatButton(
+                  child: new Text('CONFIRMAR'),
+                  onPressed: () async{
+                    model.setCode(codeController.text);
+                    controller.addItem(model);
+
+                    Navigator.of(context).pop();
+                  },
+                ),
+                new FlatButton(
+                  child: new Text('CANCELAR'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                )
+              ],
+            );
+          });
+    }
+
     return MaterialApp(
-      home: Scaffold(
+        home: Scaffold(
         floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: primaryOrange,
           child: Icon(Icons.add),
-          onPressed: (){
-            print(codeController.text);
-          },
+          onPressed: ()=> _displayDialog(context)
         ),
         body: Column(
           children: <Widget>[
@@ -30,14 +87,17 @@ class _PacketsMainState extends State<PacketsMain> {
 
             //package list
             Expanded(
-              child: ListView(
-                children: <Widget>[
-                  packageItem(size, "Encomenda 1", "XYZ5E2GF5", "em trajeto"),
-                  packageItem(size, "Growth", "XXXXXYYY2", "entregue"),
-                  packageItem(size, "Roupas", "JJJ2222", "postado"),
-                  packageItem(size, "Oculos", "VVVVVVV", "entregue"),
-
-                ],
+              child: Observer(
+                builder: (_){
+                  return ListView.builder(
+                    padding: EdgeInsets.only(top: 12),
+                      itemCount: controller.listItems.length,
+                      itemBuilder: (context, index){
+                        var item = controller.listItems[index];
+                        return packageItem(size, item);
+                      }
+                  );
+                },
               ),
             )
           ],
@@ -45,51 +105,63 @@ class _PacketsMainState extends State<PacketsMain> {
       ),
     );
   }
+  Widget packageItem(
+
+      Size size, PackageModel pack) {
+
+    return Observer(
+        builder: (_) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Card(
+                elevation: 10,
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: size.height * 0.1,
+                      child: ListTile(
+                        leading: Image(image: boxImage),
+                        title: Text(pack.title),
+                        subtitle: Text(
+                          "Codigo: " + pack.code,
+                          style: TextStyle(fontSize: 12),
+                        ),
+                        trailing: GestureDetector(
+                          onTap: () {
+                            controller.removeItem(pack);
+                          },
+                          child: Icon(Icons.close),
+                        ),
+                      ),
+                    ),
+
+                    //package status line
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 15),
+                      child: packageLineStatus(size, pack.status),
+                    ),
+
+                    //bottom card section
+                    Container(
+                      decoration: pack.cardStatus,
+                      height: size.height * 0.05,
+                      child: Center(
+                        child: Text(
+                          pack.status,
+                          style: TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    )
+                  ],
+                )),
+          );
+          }
+          );
+  }
 }
 
-Widget packageItem(
-    Size size, String title, String trackingcode, String status) {
-  return Padding(
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    child: Card(
-        elevation: 10,
-        child: Column(
-          children: <Widget>[
-            Container(
-              height: size.height * 0.1,
-              child: ListTile(
-                leading: Icon(Icons.markunread_mailbox),
-                title: Text(title),
-                subtitle: Text(
-                  "Codigo: " + trackingcode.toUpperCase(),
-                  style: TextStyle(fontSize: 12),
-                ),
-                trailing: Icon(Icons.close),
-              ),
-            ),
 
-            //package status line
-            Padding(
-              padding: EdgeInsets.only(bottom: 15),
-              child: packageLineStatus(size, status),
-            ),
-
-            //bottom card section
-            Container(
-              color: Colors.redAccent,
-              height: size.height * 0.05,
-              child: Center(
-                child: Text(
-                  "OBJETO " + status.toUpperCase(),
-                  style: TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-              ),
-            )
-          ],
-        )),
-  );
-}
 
 //widget that recieves the package status and return it visually
 Widget packageLineStatus(Size size, String status) {
@@ -99,30 +171,30 @@ Widget packageLineStatus(Size size, String status) {
   Color fonttrajeto;
   //changing the color as of package status
   switch (status) {
-    case "postado":
+    case "Objeto postado":
       trajeto = Colors.grey;
       entregue = Colors.grey;
       fontentregue = Colors.white;
       fonttrajeto = Colors.white;
 
       break;
-    case "em trajeto":
-      trajeto = Colors.green;
+    case "Objeto encaminhado":
+      trajeto = primaryOrange;
       entregue = Colors.grey;
       fontentregue = Colors.white;
       fonttrajeto = Colors.black54;
       break;
 
-    case "entregue":
-      trajeto = Colors.green;
-      entregue = Colors.green;
+    case "Objeto entregue ao destinatário":
+      trajeto = primaryOrange;
+      entregue = primaryOrange;
       fontentregue = Colors.black54;
       fonttrajeto = Colors.black54;
       break;
 
     default:
-      trajeto = Colors.redAccent;
-      entregue = Colors.redAccent;
+      trajeto = Colors.grey;
+      entregue = Colors.grey;
       break;
   }
 
@@ -135,7 +207,7 @@ Widget packageLineStatus(Size size, String status) {
             width: 15,
             height: 15,
             decoration: BoxDecoration(
-                color: Colors.green, borderRadius: BorderRadius.circular(100)),
+                color: primaryOrange, borderRadius: BorderRadius.circular(100)),
           ),
           Container(
             width: size.width * 0.3,
@@ -211,7 +283,11 @@ Widget customAppBar(Size size) {
           padding: EdgeInsets.only(left: 20, bottom: 50),
           height: size.height * 0.3 - 27,
           decoration: BoxDecoration(
-              color: Colors.redAccent,
+              gradient: LinearGradient(
+                colors: [primaryPink, primaryOrange],
+                end: Alignment.bottomCenter,
+                begin: Alignment.topCenter,
+              ),
               borderRadius: BorderRadius.only(
                   bottomRight: Radius.circular(36),
                   bottomLeft: Radius.circular(36))),
