@@ -1,5 +1,4 @@
 import 'package:etrack/assets/gradient.dart';
-import 'package:etrack/assets/styleGuide.dart';
 import 'package:etrack/pages/packets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
