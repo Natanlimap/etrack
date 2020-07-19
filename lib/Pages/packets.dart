@@ -1,11 +1,8 @@
-import 'package:etrack/assets/gradient.dart';
 import 'package:etrack/assets/styleGuide.dart';
 import 'package:etrack/classes/package.dart';
 import 'package:etrack/data/getSavedPackages.dart';
-import 'package:etrack/data/sharedpreferences.dart';
-import 'package:etrack/models/package_model.dart';
-import 'package:etrack/models/home_controller.dart';
-import 'package:etrack/services/correios.dart';
+import 'package:etrack/controllers/package_model.dart';
+import 'package:etrack/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
