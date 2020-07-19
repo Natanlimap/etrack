@@ -1,3 +1,5 @@
+
+//package class
 class Package {
   String name;
   String code;
