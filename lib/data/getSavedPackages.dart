@@ -1,8 +1,10 @@
 import 'package:etrack/data/sharedpreferences.dart';
-import 'package:etrack/models/package_model.dart';
+import 'package:etrack/controllers/package_model.dart';
 import 'package:mobx/mobx.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+//get local storage data and send it to Home Observable List
 void sharedDataToPackage(final controller) async{
   List<List<String>> data = List();
   data = await getInfoFromSharedPref();
@@ -11,6 +13,7 @@ void sharedDataToPackage(final controller) async{
   }
 }
 
+//get the observable list and save all elements into the local storage
 Future<void> attListInPref(ObservableList<PackageModel> listItems ) async{
   final prefs = await SharedPreferences.getInstance();
   List<String> names = List();
